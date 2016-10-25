@@ -45,7 +45,7 @@ class Orsr extends Nette\Object
 			foreach($links['url'] as $link) {
 				if ($onlyNames) {
 					$tmp[] = [
-						'name' => $links['name'][$i - 1],
+						'name' => html_entity_decode($links['name'][$i - 1]),
 					];
 				} else {
 					$out = $this->parse($link);
@@ -70,7 +70,7 @@ class Orsr extends Nette\Object
 		preg_match_all("/<td align=\"left\" valign=\"top\" width=\"20%\"> <span class=\"tl\">Obchodné meno:&nbsp;<\/span><\/td>\s*<td align=\"left\" width=\"80%\"><table width=\"100%\" border=\"0\">\s*<tr>\s*<td width=\"67%\"> <span class='ra'>(?<name>[^<]*)<\/span><br><\/td>\s*<td width=\"33%\" valign='top'>&nbsp; <span class='ra'>\(od: \d{2}\.\d{2}\.\d{4}\)<\/span><\/td>\s*<\/tr>\s*<\/table><\/td>\s*<\/tr>\s*<\/table>\s*<table width=\"100%\" border=\"0\" align=\"center\" cellspacing=\"3\" cellpadding=\"0\" bgcolor='#ffffff'>\s*<tr>\s*<td align=\"left\" valign=\"top\" width=\"20%\"> <span class=\"tl\">Sídlo:&nbsp;<\/span><\/td>\s*<td align=\"left\" width=\"80%\"><table width=\"100%\" border=\"0\">\s*<tr>\s*<td width=\"67%\"> <span class='ra'>(?<street>[^<]*)<\/span> <span class='ra'>(?<number>[^<]*)<\/span><br> <span class='ra'>(?<city>[^<]*)<\/span> <span class='ra'>(?<zip>[^<]*)<\/span><br><\/td>\s*<td width=\"33%\" valign='top'>&nbsp; <span class='ra'>\(od: \d{2}\.\d{2}\.\d{4}\)<\/span><\/td>\s*<\/tr>\s*<\/table><\/td>\s*<\/tr>\s*<\/table>\s*<table width=\"100%\" border=\"0\" align=\"center\" cellspacing=\"3\" cellpadding=\"0\" bgcolor='#ffffff'>\s*<tr>\s*<td align=\"left\" valign=\"top\" width=\"20%\"> <span class=\"tl\">IČO:&nbsp;<\/span><\/td>\s*<td align=\"left\" width=\"80%\"><table width=\"100%\" border=\"0\">\s*<tr>\s*<td width=\"67%\"> <span class='ra'>(?<id>[^<]*)<\/span><br><\/td>/i", $data, $tmp);
 
 		return [
-			'name' => Strings::trim(@$tmp['name'][0]),
+			'name' => Strings::trim(html_entity_decode(@$tmp['name'][0])),
 			'address' => [
 				'street' => Strings::trim(@$tmp['street'][0]),
 				'number' => Strings::trim(@$tmp['number'][0]),
