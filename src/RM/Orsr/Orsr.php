@@ -7,6 +7,8 @@ use Nette\Utils\Strings;
 
 class Orsr extends Nette\Object
 {
+	const ONLY_NAMES = TRUE;
+
 	public $limit = 2;
 
 	private $url = 'http://orsr.sk/';
@@ -27,27 +29,36 @@ class Orsr extends Nette\Object
 		}
 	}
 
-	public function getByName($name)
+	public function getByName($name, $limit = NULL, $onlyNames = FALSE)
 	{
-		if (preg_match_all(
-			"/<a href=\"([^\"]*)\" class=\"link\">Aktuálny<\/a>/",
-			$this->toUtf8(file_get_contents($this->url . 'hladaj_subjekt.asp?OBMENO=' . urlencode($this->to1250($name)) . '&PF=0&SID=0&R=on')),
-			$links
-		) < 1)
-			return;
+		if ($limit === NULL) {
+			$limit = $this->limit;
+		}
 
 		$tmp = [];
-		$i=1;
-		foreach($links[1] as $link) {
-			$out = $this->parse($link);
-			if ($out)
-				$tmp[] = $out;
-			if (++$i > $this->limit)
-				break;
+		if (preg_match_all(
+			"/<div class=\"sbj\">(?<name>[^<]*)<\/div><\/td>\s*<td><div class=\"bmk\">\s*<a href=\"(?<url>[^\"]*)\" class=\"link\">Aktuálny<\/a>/",
+			$this->toUtf8(file_get_contents($this->url . 'hladaj_subjekt.asp?OBMENO=' . urlencode($this->to1250($name)) . '&PF=0&SID=0&R=on')),
+			$links
+		) > 0) {
+			$i=1;
+			foreach($links['url'] as $link) {
+				if ($onlyNames) {
+					$tmp[] = [
+						'name' => $links['name'][$i - 1],
+					];
+				} else {
+					$out = $this->parse($link);
+					if ($out)
+						$tmp[] = $out;
+				}
+				$i++;
+				if ($i > $limit)
+					break;
+			}
 		}
-		return ($tmp)
-			? $tmp
-			: NULL;
+
+		return $tmp;
 	}
 
 	private function parse($link) {
