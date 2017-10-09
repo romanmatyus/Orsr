@@ -17,11 +17,11 @@
 		"issues": "https://github.com/romanmatyus/Orsr/issues"
 	},
 	"require": {
-		"nette/utils": "~2.3@dev",
-		"nette/tester": "~1.3"
+		"nette/utils": "~2.3@dev"
 	},
 	"require-dev": {
 		"tracy/tracy": "@dev",
+		"nette/tester": ">=1.3",
 		"jakub-onderka/php-parallel-lint": "~0.8"
 	},
 	"autoload": {
