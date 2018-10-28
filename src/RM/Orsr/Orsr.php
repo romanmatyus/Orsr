@@ -5,7 +5,7 @@ namespace RM\Orsr;
 use Nette;
 use Nette\Utils\Strings;
 
-class Orsr extends Nette\Object
+class Orsr
 {
 	const ONLY_NAMES = TRUE;
 
